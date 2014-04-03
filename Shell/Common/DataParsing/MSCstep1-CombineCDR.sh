@@ -10,3 +10,4 @@ do
     echo ${D:2}
     find ${D}/*.cdr -exec cat {} > "/ischool/jb/roshan_anon/CDR_chad/$1-$2/MSC/CombinedCDR/MSC-$1-$2-${D:2}.cdr" \;
 done
+rm "/ischool/jb/roshan_anon/CDR_chad/$1-$2/MSC/CombinedCDR/MSC-$1-$2-.cdr"
