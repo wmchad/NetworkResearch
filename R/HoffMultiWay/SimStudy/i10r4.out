@@ -1,0 +1,62 @@
+
+R version 2.10.1 (2009-12-14)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(coda)
+Loading required package: lattice
+> 
+> S<-11000 ; burn<-1000 ; odens<-1
+> 
+> R0<-4
+> KS<-10
+> seeds<- 1:10 + (KS-1)*10
+> MS<-NULL
+> 
+> for(seed in seeds)
++ {
++   set.seed(seed)
++   source("datagen.r")  # generate data
++   for(R in 4:4)     # for each presumed rank
++   {
++     source("ibayes.r") 
++     mse<-c(mean(Y^2),                 # size of matrix
++            mean((Y-M0)^2),            # MSE of Y
++            mean((Y-M.ps/nss)^2) ,     # RSS of mean
++            mean((M0-M.ps/nss)^2),     # MSE of of mean 
++            mean((Y-M.mode)^2) ,       # RSS of mode
++            mean((M0-M.mode)^2),       # MSE of mode
++ 	   mean((Y-M.ols)^2),         # RSS of ols
++            mean((M0-M.ols)^2))        # MSE of ols
++     cat(seed,R,round(100*mse,3)," ",round(DIC,2),"\n")
++     MS<-rbind(MS,c(seed,R,mse,DIC,eSS))
++   }
++   dput(MS,paste("ibayes.SS",KS,".R0",R0,".results",sep=""))
++ }
+91 4 126.263 26.217 22.069 5.246 23.17 5.383 21.755 5.121   852.59 
+92 4 121.978 24.57 18.25 4.605 19.432 4.693 18.233 7.476   767.62 
+93 4 117.693 24.766 19.89 4.295 22.412 4.473 19.933 6.519   820.27 
+94 4 124.973 25.503 19.554 5.962 21.045 6.004 19.461 7.667   800.61 
+95 4 118.986 23.752 18.941 2.834 20.56 2.799 18.835 5.308   794.96 
+96 4 124.676 25.5 19.748 4.935 20.476 4.984 19.779 6.28   795.8 
+97 4 124.969 23.581 17.204 4.704 19.648 4.737 17.299 7.462   744.97 
+98 4 125.592 24.401 17.431 4.422 18.499 4.413 17.513 7.444   744.41 
+99 4 124.491 24.523 20.402 4.353 21.649 4.408 20.56 4.554   826.69 
+100 4 118.197 23.481 17.941 4.257 20.214 4.408 17.979 6.794   767.6 
+> 
+> 
+> 
